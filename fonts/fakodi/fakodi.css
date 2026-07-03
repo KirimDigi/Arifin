@@ -1,0 +1,7 @@
+@font-face {
+    font-family: 'Fakodi';
+    src: url('fakodi-fakodi-400.otf');
+    src: url('fakodi-fakodi-400.woff2') format('woff2'),
+         url('fakodi-fakodi-400.woff') format('woff'),
+         url('fakodi-fakodi-400.ttf')  format('truetype');
+}
