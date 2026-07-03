@@ -796,11 +796,40 @@
 
           <script>
             document.addEventListener("DOMContentLoaded", function () {
-              // Auto-fill guest name from URL if available
+              // Auto-fill guest name from URL query parameter (?to=...) or hash (#to=...)
               var urlParams = new URLSearchParams(window.location.search);
               var guestName = urlParams.get('to') || '';
+
+              if (!guestName && window.location.hash) {
+                var hash = window.location.hash.substring(1); // remove '#'
+                if (hash.indexOf('to=') === 0) {
+                  guestName = decodeURIComponent(hash.substring(3));
+                } else {
+                  if (hash.indexOf('?') === 0) {
+                    hash = hash.substring(1);
+                  }
+                  var hashParams = new URLSearchParams(hash);
+                  guestName = hashParams.get('to') || '';
+                }
+              }
+
               if (guestName) {
-                document.getElementById('rsvpName').value = guestName.trim();
+                guestName = guestName.trim();
+                // 1. Fill RSVP form name field
+                var rsvpNameEl = document.getElementById('rsvpName');
+                if (rsvpNameEl) {
+                  rsvpNameEl.value = guestName;
+                }
+                // 2. Fill cover guest slot
+                var guestNameSlotEl = document.getElementById('guestNameSlot');
+                if (guestNameSlotEl) {
+                  guestNameSlotEl.innerHTML = guestName;
+                }
+                // 3. Update dataset guest on satuMomen
+                var satuMomenEl = document.getElementById('satuMomen');
+                if (satuMomenEl) {
+                  satuMomenEl.setAttribute('data-guest', guestName);
+                }
               }
 
               var scriptUrl = "https://script.google.com/macros/s/AKfycby-X7LqbjxMGJ0hoflu-OEg-F5zqGZywgqhh3YdQ-WOZ682e4Oju-xsiEw7gBxSAfg5/exec";
